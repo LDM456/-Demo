@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="input1">123</button>
+    <script>
+        //封装过期控制代码
+    function set(key,value){
+        var curTime = new Date().getTime();
+        localStorage.setItem(key,JSON.stringify({data:value,time:curTime}));
+    }
+    function get(key,exp){
+        var data = localStorage.getItem(key);
+        var dataObj = JSON.parse(data);
+        if (new Date().getTime() - dataObj.time>exp) {
+            console.log('信息已过期');
+            //alert("信息已过期")
+        }else{
+            //console.log("data="+dataObj.data);
+            //console.log(JSON.parse(dataObj.data));
+            var dataObjDatatoJson = JSON.parse(dataObj.data)
+            return dataObjDatatoJson;
+        }
+    }
+        window.onload = function(){
+            var Ipt = document.getElementById('input1')
+            var value = '{"name":"和派孔明","Age":"18","address":"陆家嘴金融城"}';
+            set('information',value);
+
+            Ipt.onclick = function(){
+                var dataObjData = get('information',1000*60) //过期时间为1分钟
+                console.log(dataObjData || null);
+                if(dataObjData != "" && dataObjData != null){
+                    console.log('姓名'+ dataObjData.name);
+                    console.log('年龄'+dataObjData.Age);
+                    console.log("地址"+ dataObjData.address)
+                }else{
+                    alert('获取的身份信息已过期')
+                }
+            }
+        }
+    
+    </script>
+</body>
+</html>
